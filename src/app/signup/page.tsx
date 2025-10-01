@@ -17,8 +17,16 @@ interface FormData {
   yearsInBusiness: string;
   bookingEngine: string;
 }
+interface Field {
+  name: string;
+  placeholder: string;
+  type?: string;
+  required?: boolean;
+  minLength?: number;
+  min?: string;
+}
 
-const STEPS = [
+const STEPS: { fields: Field[] }[] = [
   {
     fields: [
       { name: "firstName", placeholder: "First Name", required: true },
@@ -45,7 +53,7 @@ const STEPS = [
         name: "yearsInBusiness",
         type: "number",
         placeholder: "Years in Business",
-        min: "0",
+        min: "0", // take min as string
       },
     ],
   },
@@ -206,6 +214,7 @@ export default function SignupPage() {
                   onChange={handleChange}
                   min={field.min}
                   minLength={field.minLength}
+                  required={field.required}
                 />
                 {errors[field.name] && (
                   <p className="text-red-500 text-sm mt-1 ml-4">
@@ -217,12 +226,8 @@ export default function SignupPage() {
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-4 pt-4">
-            {currentStep > 0 && (
-              <Button variant="outline" onClick={handleBack}>
-                Back
-              </Button>
-            )}
+          <div className="flex gap-4 pt-4 justify-center">
+            {currentStep > 0 && <Button onClick={handleBack}>Back</Button>}
 
             {currentStep < STEPS.length - 1 ? (
               <Button variant="primary" onClick={handleNext}>

@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/Button";
+import Image from "next/image";
+import Link from "next/link";
 
 interface FormData {
   firstName: string;
@@ -157,7 +159,7 @@ export default function SignupPage() {
         toast.success("Account Created Successfully!");
         // Redirect after successful signup
         setTimeout(() => {
-          router.push("/dashboard"); // Change to your desired route
+          router.push("/login");
         }, 1500);
       } else {
         const { error } = await res.json();
@@ -177,21 +179,7 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <div className="w-20 h-20 bg-gradient-to-br from-[#9DCC3C]/20 to-[#9DCC3C]/10 rounded-full flex items-center justify-center">
-            <div className="w-12 h-12 bg-[#9DCC3C] rounded-full flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-              </svg>
-            </div>
+            <Image src="/tree.png" alt="treeLogo" height={50} width={50} />
           </div>
         </div>
 
@@ -243,13 +231,13 @@ export default function SignupPage() {
           {/* Login Link */}
           {currentStep === 0 && (
             <p className="text-sm text-center text-gray-600 pt-4">
-              Already have an account?{" "}
-              <a
+              Already have an account?
+              <Link
                 href="/login"
                 className="text-[#9DCC3C] hover:underline font-medium"
               >
                 Login
-              </a>
+              </Link>
             </p>
           )}
         </div>

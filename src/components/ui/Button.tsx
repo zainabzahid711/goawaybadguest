@@ -1,12 +1,16 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Loader from "./loader";
 
 interface ButtonProps {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "outline";
   onClick?: () => void;
   href?: string;
+  loading?: boolean;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,6 +18,9 @@ const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   onClick,
   href,
+  loading = false,
+  disabled = false,
+  type = "button",
 }) => {
   const baseStyles =
     "px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 text-sm sm:text-base rounded-full font-medium transition-all duration-200 cursor-pointer inline-block text-center";
@@ -34,10 +41,18 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
+      type={type}
+      disabled={loading || disabled}
       onClick={onClick}
-      className={`${baseStyles} ${variants[variant]} cursor-pointer`}
+      className={`${baseStyles} ${variants[variant]} ${
+        loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+      }`}
     >
-      {children}
+      {loading ? (
+        <Loader size={20} color={variant === "primary" ? "white" : "#333"} />
+      ) : (
+        children
+      )}
     </button>
   );
 };

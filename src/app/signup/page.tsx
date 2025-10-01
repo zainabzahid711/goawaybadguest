@@ -86,6 +86,7 @@ const VALIDATION_RULES = {
 
 export default function SignupPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<FormData>({
@@ -142,6 +143,7 @@ export default function SignupPage() {
 
   const handleSignup = async () => {
     if (!validateStep()) return;
+    setIsLoading(true);
 
     try {
       const res = await fetch("/api/auth/signup", {
@@ -168,6 +170,8 @@ export default function SignupPage() {
     } catch (err) {
       console.error("Signup error:", err);
       toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -190,7 +194,13 @@ export default function SignupPage() {
         </div>
 
         {/* Form */}
-        <div className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSignup();
+          }}
+          className="space-y-6"
+        >
           <div className="space-y-4">
             {STEPS[currentStep].fields.map((field) => (
               <div key={field.name}>
@@ -218,11 +228,15 @@ export default function SignupPage() {
             {currentStep > 0 && <Button onClick={handleBack}>Back</Button>}
 
             {currentStep < STEPS.length - 1 ? (
-              <Button variant="primary" onClick={handleNext}>
+              <Button
+                variant="primary"
+                onClick={handleNext}
+                loading={isLoading}
+              >
                 Continue
               </Button>
             ) : (
-              <Button variant="primary" onClick={handleSignup}>
+              <Button type="submit" variant="primary" onClick={handleSignup}>
                 Create Account
               </Button>
             )}
@@ -240,7 +254,7 @@ export default function SignupPage() {
               </Link>
             </p>
           )}
-        </div>
+        </form>
       </div>
     </div>
   );

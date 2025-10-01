@@ -9,6 +9,7 @@ import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
@@ -39,6 +40,8 @@ export default function LoginPage() {
   const handleLogin = async () => {
     if (!validate()) return;
 
+    setIsLoading(true);
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -56,6 +59,8 @@ export default function LoginPage() {
     } catch (err) {
       console.error("Login error:", err);
       toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +80,13 @@ export default function LoginPage() {
         </div>
 
         {/* Form */}
-        <div className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+          className="space-y-6"
+        >
           <div className="space-y-4">
             <div>
               <Input
@@ -109,7 +120,12 @@ export default function LoginPage() {
           </div>
 
           <div className="flex justify-center pt-4">
-            <Button variant="primary" onClick={handleLogin}>
+            <Button
+              type="submit"
+              variant="primary"
+              onClick={handleLogin}
+              loading={isLoading}
+            >
               Login
             </Button>
           </div>
@@ -123,7 +139,7 @@ export default function LoginPage() {
               Sign Up
             </Link>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );

@@ -6,7 +6,9 @@ import Loader from "./loader";
 interface ButtonProps {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "outline";
-  onClick?: () => void;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+  ) => void;
   href?: string;
   loading?: boolean;
   disabled?: boolean;
@@ -31,10 +33,22 @@ const Button: React.FC<ButtonProps> = ({
       "border-2 border-white/60 text-white hover:bg-white/10 backdrop-blur-sm",
   };
 
+  const content = loading ? (
+    <Loader size={20} color={variant === "primary" ? "white" : "#333"} />
+  ) : (
+    children
+  );
+
   if (href) {
     return (
-      <Link href={href} className={`${baseStyles} ${variants[variant]}`}>
-        {children}
+      <Link
+        href={href}
+        onClick={onClick}
+        className={`${baseStyles} ${variants[variant]} ${
+          loading ? "opacity-70 pointer-events-none" : ""
+        }`}
+      >
+        {content}
       </Link>
     );
   }
